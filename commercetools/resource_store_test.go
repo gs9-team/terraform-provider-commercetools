@@ -149,7 +149,7 @@ func testAccNewStoreConfigWithLanguages(name string, key string, languages []str
 	}`, name, key, languages)
 }
 
-func testAccNewStoreConfigWithChannels(name string, key string, languages []string) string {
+func testAccNewStoreConfigWithDistributionChannels(name string, key string, languages []string) string {
 	return fmt.Sprintf(`
 	resource "commercetools_channel" "test_channel" {
 		key = "TEST"
@@ -164,6 +164,45 @@ func testAccNewStoreConfigWithChannels(name string, key string, languages []stri
 		key = "%[2]s"
 		languages = %[3]q
 		distribution_channels = [commercetools_channel.test_channel.key]
+	}
+	`, name, key, languages)
+}
+
+func testAccNewStoreConfigWithSupplyChannels(name string, key string, languages []string) string {
+	return fmt.Sprintf(`
+	resource "commercetools_channel" "test_channel" {
+		key = "TEST"
+		roles = ["InventorySupply"]
+	}
+
+	resource "commercetools_store" "test" {
+		name = {
+			en = "%[1]s"
+			nl = "%[1]s"
+		}
+		key = "%[2]s"
+		languages = %[3]q
+		supply_channels = [commercetools_channel.test_channel.key]
+	}
+	`, name, key, languages)
+}
+
+func testAccNewStoreConfigWithBothChannels(name string, key string, languages []string) string {
+	return fmt.Sprintf(`
+	resource "commercetools_channel" "test_channel" {
+		key = "test_store"
+		roles = ["ProductDistribution, InventorySupply"]
+	}
+
+	resource "commercetools_store" "test_store" {
+		name = {
+			en = "%[1]s"
+			nl = "%[1]s"
+		}
+		key = "%[2]s"
+		languages = %[3]q
+		distribution_channels = [commercetools_channel.test_channel.key]
+		supply_channels = [commercetools_channel.test_channel.key]
 	}
 	`, name, key, languages)
 }
