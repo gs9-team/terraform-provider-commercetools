@@ -73,7 +73,7 @@ func resourceStoreCreate(ctx context.Context, d *schema.ResourceData, m interfac
 		Name:                 &name,
 		Languages:            expandStringArray(d.Get("languages").([]interface{})),
 		DistributionChannels: dcIdentifiers,
-		SupplyChannels: scIdentifiers,
+		SupplyChannels:       scIdentifiers,
 	}
 
 	client := getClient(m)
